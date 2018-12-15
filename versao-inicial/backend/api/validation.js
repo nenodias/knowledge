@@ -26,5 +26,5 @@ module.exports = app => {
 		}
 	}
 	
-	return { exstsOrError, notExistsOrError, equalsOrError };
+	return { existsOrError, notExistsOrError, equalsOrError };
 }
