@@ -31,17 +31,18 @@ module.exports = app => {
         user.password = encryptPassword(user.password);
         delete user.confirmPassword;
 
-        if(user.id){
-            app.db('users')
-                .update(user)
-                .where({ id:user.id })
-                .then(_ => res.status(204).send())
-                .catch(err => res.status(500).send(err))
-        } else {
-            app.db('users')
-                .insert(user)
-                .then(_ => res.status(204).send())
-                .catch(err => res.status(500).send(err))
+        try{
+            if(user.id){
+                await app.db('users')
+                    .update(user)
+                    .where({ id:user.id });
+            } else {
+                await app.db('users')
+                    .insert(user);
+            }
+            res.status(204).send();
+        }catch(err){
+            res.status(500).send(err)
         }
         
     }
