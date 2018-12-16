@@ -4,7 +4,7 @@ module.exports = app => {
     const { existsOrError, notExistsOrError, equalsOrError } = app.api.validation;
 
     const encryptPassword = password => {
-        const salt = bcrypt.genSalt(10);
+        const salt = bcrypt.genSaltSync(10);
         return bcrypt.hashSync(password, salt);
     };
 
@@ -20,6 +20,7 @@ module.exports = app => {
             existsOrError(user.password, 'Senha não informada');
             existsOrError(user.confirmPassword, 'Confirmação da senha não informada');
             equalsOrError(user.password, user.confirmPassword, 'Senhas não conferem');
+            
             const userFromDB = await app.db('users').where({ email: user.email }).first();
             if(!user.id){
                 notExistsOrError(userFromDB, 'Usuário já cadastrado');
@@ -27,8 +28,9 @@ module.exports = app => {
         } catch(msg) {
             return res.status(400).send(msg);
         }
-
+        
         user.password = encryptPassword(user.password);
+        
         delete user.confirmPassword;
 
         try{
