@@ -1,5 +1,5 @@
 module.exports = app => {
-    const { existsOrError, notExistsOrError } = app.api.validation;
+    const { existsOrError } = app.api.validation;
 
     const save = async (req, res) => {
         const article = { ...req.body };
@@ -36,7 +36,7 @@ module.exports = app => {
         try {
             const rowsDeleted = await app.db('articles')
                 .where({ id: req.params.id }).del();
-            notExistsOrError(rowsDeleted, 'Artigo não encontrado');
+            existsOrError(rowsDeleted, 'Artigo não encontrado');
             return res.status(204).send();
         } catch (err) {
             return res.status(404).send(err);
