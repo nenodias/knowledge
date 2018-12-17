@@ -28,4 +28,7 @@ module.exports = app => {
         .put(app.api.article.save)
         .delete(app.api.article.remove)
         .get(app.api.article.getById);
+
+    app.route('/categories/:id/articles')
+        .get(app.api.article.getByCategory);
 }
