@@ -47,4 +47,8 @@ module.exports = app => {
     app.route('/categories/:id/articles')
         .all(authenticate)
         .get(app.api.article.getByCategory);
+
+    app.route('/stats')
+        .all(authenticate)
+        .get(app.api.stat.get);
 }
