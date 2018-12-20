@@ -14,6 +14,7 @@ module.exports = app => {
     app.route('/users/:id')
         .all(authenticate)
         .put(admin(app.api.user.save))
+        .delete(admin(app.api.user.remove))
         .get(admin(app.api.user.getById));
     
 

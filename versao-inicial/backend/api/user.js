@@ -14,6 +14,13 @@ module.exports = app => {
             user.id = req.params.id;
         }
 
+        if(!req.originalUrl.startsWith('/users')){
+            user.admin = false;
+        }
+        if(!req.user && !req.user.admin){
+            user.admin = false;
+        }
+
         try{
             existsOrError(user.name, 'Nome não informado');
             existsOrError(user.email, 'Email não informado');
@@ -37,7 +44,8 @@ module.exports = app => {
             if(user.id){
                 await app.db('users')
                     .update(user)
-                    .where({ id:user.id });
+                    .where({ id:user.id })
+                    .whereNull('deletedAt');
             } else {
                 await app.db('users')
                     .insert(user);
@@ -47,20 +55,22 @@ module.exports = app => {
             res.status(500).send(err)
         }
         
-    }
+    };
 
     const get = (req, res) => {
         app.db('users')
             .select('id', 'name', 'email', 'admin')
+            .whereNull('deletedAt')
             .then(users => res.json(users))
             .catch(err => res.status(500).send(err))
-    }
+    };
 
     const getById = async (req, res) => {
         try{
             const user = await app.db('users')
                 .select('id', 'name', 'email', 'admin')
                 .where({ id: req.params.id })
+                .whereNull('deletedAt')
                 .first();
             if(!user){
                 throw "Usuário não encontrado";
@@ -70,7 +80,24 @@ module.exports = app => {
         } catch(err) {
             res.status(404).send(err)
         }
-    }
+    };
 
-    return { save, get, getById };
+    const remove = async (req, res) => {
+        try{
+            const articles = await app.db('articles')
+                .where({ userId: req.params.id });
+            notExistsOrError(articles, 'Usuário possui artigos.');
+
+            const rowsUpdated = await app.db('users')
+                .update({ deletedAt: new Date() })
+                .where({ userId: req.params.id });
+            existsOrError(rowsUpdated, 'Usuário não encontrado');
+
+            res.status(204).send();
+        }catch(err){
+            res.status(400).send(err);
+        }
+    };
+
+    return { save, get, getById, remove };
 }
