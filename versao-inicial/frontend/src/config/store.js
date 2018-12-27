@@ -5,6 +5,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        user: {
+            name: 'Usuário Mock',
+            email: 'mock@cod3r.com.br'
+        },
         isMenuVisible: true
     },
     mutations: {
