@@ -90,11 +90,12 @@ module.exports = app => {
 
             const rowsUpdated = await app.db('users')
                 .update({ deletedAt: new Date() })
-                .where({ userId: req.params.id });
+                .where({ id: req.params.id });
             existsOrError(rowsUpdated, 'Usuário não encontrado');
 
             res.status(204).send();
         }catch(err){
+            console.error(err);
             res.status(400).send(err);
         }
     };
