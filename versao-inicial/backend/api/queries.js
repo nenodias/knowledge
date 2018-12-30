@@ -4,7 +4,7 @@ module.exports = {
             SELECT id from categories WHERE id = ?
             UNION ALL 
             SELECT c.id FROM subcategories, categories c
-                WHERE "parrentId" = subcategories.id
+                WHERE "parentId" = subcategories.id
         )
         SELECT id FROM subcategories
     `   
