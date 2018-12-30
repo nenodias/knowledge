@@ -3,7 +3,11 @@ module.exports = app => {
     const { existsOrError, notExistsOrError } = app.api.validation;
 
     const save = async (req, res) => {
-        const category = { ...req.body };
+        const category = { 
+            id: req.body.id,
+            name: req.body.name,
+            parentId: req.body.parentId
+        };
         if (req.params.id) {
             category.id = req.params.id;
         }
@@ -44,7 +48,7 @@ module.exports = app => {
 
             res.status(204).send();
         } catch (err) {
-            res.status(400).send(msg);
+            res.status(400).send(err);
         }
     };
 
