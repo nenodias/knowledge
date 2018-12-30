@@ -3,6 +3,7 @@ import Vue from 'vue';
 export const baseApiUrl = 'http://localhost:4000';
 
 export function showError(e) {
+    console.log(e);
     if(e && e.response && e.response.data) {
         Vue.toasted.global.defaultError({ msg: e.response.data });
     } else if(typeof e === 'string') {
