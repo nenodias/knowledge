@@ -51,7 +51,7 @@ export default {
 
 				const res = await axios.post(`${baseApiUrl}/validateToken`, userData);
 				if(res.data){
-					this.$store.commit('setUser', res.data);
+					this.$store.commit('setUser', userData);
 				} else {
 					localStorage.removeItem(userKey);
 					this.$router.push({ name: 'auth' });
