@@ -4,7 +4,7 @@
             :main="category.name" sub="Categoria" />
         <ul>
             <li v-for="article in articles" :key="article.id">
-                {{ article.name }}
+                <ArticleItem :article="article" />
             </li>
         </ul>
         <div class="load-more">
@@ -17,11 +17,13 @@
 import axios from 'axios';
 import { baseApiUrl, showError } from '@/global';
 import PageTitle from '../templates/PageTitle';
+import ArticleItem from './ArticleItem';
 
 export default {
     name: 'ArtivlesByCategory',
     components: {
-        PageTitle
+        PageTitle,
+        ArticleItem
     },
     data(){
         return {
