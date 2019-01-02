@@ -5,7 +5,7 @@
 		  :hideUserDropdown="!user"
 		/>
 		<Menu v-if="user" />
-		<Loading v-if="validateToken" />
+		<Loading v-if="validatingToken" />
 		<Content v-else />
 		<Footer />
 	</div>
@@ -39,13 +39,13 @@ export default {
 	methods: {
 		async validateToken() {
 			try{
-				this.validateToken = true;
+				this.validatingToken = true;
 				const json = localStorage.getItem(userKey);
 				const userData = JSON.parse(json);
 				this.$store.commit('setUser', null);
 
 				if(!userData) {
-					this.validateToken = false;
+					this.validatingToken = false;
 					return this.$router.push({ name: 'auth' });
 				}
 
@@ -56,8 +56,9 @@ export default {
 					localStorage.removeItem(userKey);
 					this.$router.push({ name: 'auth' });
 				}
-				this.validateToken = false;
+				this.validatingToken = false;
 			} catch(err) {
+				this.validatingToken = false;
 				showError(err);
 			}
 		}
